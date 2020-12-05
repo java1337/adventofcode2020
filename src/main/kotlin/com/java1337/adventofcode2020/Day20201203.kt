@@ -106,7 +106,7 @@ class Day20201203 {
         val three_one = countTreesHit(input, 3)
         val five_one = countTreesHit(input, 5)
         val seven_one = countTreesHit(input, 7)
-        val one_two = countTreesHit(input.filterIndexed { index, s -> index % 2 == 0 }, 1)
+        val one_two = countTreesHit(input.filterIndexed { index, _ -> index % 2 == 0 }, 1)
 
         return one_one * three_one * five_one * seven_one * one_two
     }

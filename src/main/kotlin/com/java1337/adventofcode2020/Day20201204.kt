@@ -178,7 +178,7 @@ class Day20201204(input: List<String>) {
 
 fun main() {
     @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    val inputRaw = Day20201203::class.java.classLoader.getResource("Day20201204.txt").readText()
+    val inputRaw = Day20201204::class.java.classLoader.getResource("Day20201204.txt").readText()
     val input = inputRaw.split("\n")
 
     val obj = Day20201204(input)
