@@ -90,7 +90,6 @@ class Day20201203 {
         var currentColumn = 0
         return input.map {
             val row = Row(it)
-            println("Checking column $currentColumn with input $it")
             val result = if (row.checkRow(currentColumn)) {
                 1
             } else {
@@ -113,9 +112,7 @@ class Day20201203 {
 }
 
 fun main() {
-    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    val inputRaw = Day20201203::class.java.classLoader.getResource("Day20201203.txt").readText()
-    val input = inputRaw.split("\n")
+    val input = Utils.readFileAsListOfString("Day20201203.txt")
 
     val firstOutput = Day20201203().countTreesHit(input, 3)
     println("Trees hit (3,1)= $firstOutput")

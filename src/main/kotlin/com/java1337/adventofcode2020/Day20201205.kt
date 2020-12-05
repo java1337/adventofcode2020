@@ -117,12 +117,9 @@ class Day20201205(input: List<String>) {
 }
 
 fun main() {
-
-    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    val inputRaw = Day20201205::class.java.classLoader.getResource("Day20201205.txt").readText()
-    val input = inputRaw.split("\n")
-
+    val input = Utils.readFileAsListOfString("Day20201205.txt")
     val obj = Day20201205(input)
+
     println("Max Boarding Pass = ${obj.maxBoardingPass}")
     println("Missing Boarding Pass = ${obj.missingPass}")
 }
