@@ -12,7 +12,7 @@ internal class Day20201201Test {
         val input = listOf(1, 2, 3)
 
         // when
-        val actual = Day20201201().productForTwoInputsThatSomeTo2020(input)
+        val actual = Day20201201(input).productForTwoInputsThatSumTo2020()
 
         // thne
         assertEquals(null, actual)
@@ -25,37 +25,12 @@ internal class Day20201201Test {
         val input = listOf(1, 2019)
 
         // when
-        val actual = Day20201201().productForTwoInputsThatSomeTo2020(input)
+        val actual = Day20201201(input).productForTwoInputsThatSumTo2020()
 
         // thne
         assertEquals(2019, actual)
     }
 
-    @Test
-    fun `return null if 1010 is in the list once`() {
-
-        // given
-        val input = listOf(1,1010)
-
-        // when
-        val actual = Day20201201().productForTwoInputsThatSomeTo2020(input)
-
-        // thne
-        assertEquals(null, actual)
-    }
-
-    @Test
-    fun `return product if 1010 is in the more than once`() {
-
-        // given
-        val input = listOf(1,1010,1010)
-
-        // when
-        val actual = Day20201201().productForTwoInputsThatSomeTo2020(input)
-
-        // thne
-        assertEquals(1020100, actual)
-    }
 
     @Test
     fun `return right value for the sample input`() {
@@ -64,7 +39,7 @@ internal class Day20201201Test {
         val input = listOf(1721, 979, 366, 299, 675, 1456)
 
         // when
-        val actual = Day20201201().productForTwoInputsThatSomeTo2020(input)
+        val actual = Day20201201(input).productForTwoInputsThatSumTo2020()
 
         // thne
         assertEquals(514579, actual)
