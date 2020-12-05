@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 internal class Day20201202Test {
 
     @Test
-    fun `shouldCountValidPasswordsWithSampleInputFirst`() {
+    fun shouldCountValidPasswordsWithSampleInputFirst() {
 
         // given
         val input = listOf(
@@ -17,14 +17,14 @@ internal class Day20201202Test {
         )
 
         // when
-        val actual = Day20201202().countValidPasswordsFirst(input)
+        val actual = Day20201202(input).countValidPasswordsFirst()
 
         // then
         assertEquals(2, actual)
     }
 
     @Test
-    fun `shouldCountValidPasswordsWithSampleInputSecond`() {
+    fun shouldCountValidPasswordsWithSampleInputSecond() {
 
         // given
         val input = listOf(
@@ -34,7 +34,7 @@ internal class Day20201202Test {
         )
 
         // when
-        val actual = Day20201202().countValidPasswordsSecond(input)
+        val actual = Day20201202(input).countValidPasswordsSecond()
 
         // then
         assertEquals(1, actual)

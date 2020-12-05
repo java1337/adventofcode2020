@@ -23,64 +23,91 @@ import java.io.File
  * 1-3 a: abcde
  * 1-3 b: cdefg
  * 2-9 c: ccccccccc
- * Each line gives the password policy and then the password. The password policy indicates the lowest and highest number of times a given letter must appear for the password to be valid. For example, 1-3 a means that the password must contain a at least 1 time and at most 3 times.
  *
- * In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.
+ * Each line gives the password policy and then the password. The password
+ * policy indicates the lowest and highest number of times a given letter
+ * must appear for the password to be valid. For example, 1-3 a means that
+ * the password must contain a at least 1 time and at most 3 times.
+ *
+ * In the above example, 2 passwords are valid. The middle password, cdefg,
+ * is not; it contains no instances of b, but needs at least 1. The first
+ * and third passwords are valid: they contain one a or nine c, both within
+ * the limits of their respective policies.
  *
  * How many passwords are valid according to their policies?
  *
+ * --- Part Two ---
+ *
+ * While it appears you validated the passwords correctly, they don't
+ * seem to be what the Official Toboggan Corporate Authentication System
+ * is expecting.
+ *
+ * The shopkeeper suddenly realizes that he just accidentally explained
+ * the password policy rules from his old job at the sled rental place
+ * down the street! The Official Toboggan Corporate Policy actually works
+ * a little differently.
+ *
+ * Each policy actually describes two positions in the password, where 1
+ * means the first character, 2 means the second character, and so on.
+ * (Be careful; Toboggan Corporate Policies have no concept of "index zero"!)
+ * Exactly one of these positions must contain the given letter. Other
+ * occurrences of the letter are irrelevant for the purposes of policy
+ * enforcement.
+ *
+ * Given the same example list from above:
+ *
+ * 1-3 a: abcde is valid: position 1 contains a and position 3 does not.
+ * 1-3 b: cdefg is invalid: neither position 1 nor position 3 contains b.
+ * 2-9 c: ccccccccc is invalid: both position 2 and position 9 contain c.
+ *
+ * How many passwords are valid according to the new interpretation of the
+ * policies?
+ *
  */
-class Day20201202 {
+class Day20201202(input: List<String>) {
 
-    data class Validation(val min: Int, val max: Int, val char: Char) {
-        fun isValidFirst(input: String) : Boolean {
-            val count = input.filter { it == char }.length
+    private val validations = input.map { Validation(it) }
+
+    class Validation(input: String) {
+        private val min: Int
+        private val max: Int
+        private val char: Char
+
+        private val testString : String
+
+        init {
+            val match = Regex("(\\d+)-(\\d+) (\\w): (\\w+)").find(input)!!
+            val (min, max, char, string) = match.destructured
+            this.min = min.toInt()
+            this.max = max.toInt()
+            this.char = char[0]
+
+            testString = string
+        }
+
+        fun isValidFirst() : Boolean {
+            val count = testString.filter { it == char }.length
             return count in min..max
         }
-        fun isValidSecond(input: String) : Boolean {
-            return (input[min-1] == char) xor (input[max-1] == char)
+        fun isValidSecond() : Boolean {
+            return (testString[min-1] == char) xor (testString[max-1] == char)
         }
     }
 
-    fun countValidPasswordsFirst(input : List<String>) : Int {
-        val results: List<Int> = input
-            .map {
-                val match = Regex("(\\d+)-(\\d+) (\\w): (\\w+)").find(it)!!
-                val (min, max, char, string) = match.destructured
-                val validation = Validation(min.toInt(), max.toInt(), char[0])
-                if (validation.isValidFirst(string)) {
-                    1
-                } else {
-                    0
-                }
-            }
-        return results.reduce { sum, element -> sum + element }
+    fun countValidPasswordsFirst() : Int {
+        return validations.filter { it.isValidFirst() }.count()
     }
 
-    fun countValidPasswordsSecond(input : List<String>) : Int {
-        val results: List<Int> = input
-            .map {
-                val match = Regex("(\\d+)-(\\d+) (\\w): (\\w+)").find(it)!!
-                val (min, max, char, string) = match.destructured
-                val validation = Validation(min.toInt(), max.toInt(), char[0])
-                if (validation.isValidSecond(string)) {
-                    1
-                } else {
-                    0
-                }
-            }
-        return results.reduce { sum, element -> sum + element }
+    fun countValidPasswordsSecond() : Int {
+        return validations.filter { it.isValidSecond() }.count()
     }
 }
 
 fun main() {
-    val inputRaw = Day20201202::class.java.classLoader.getResource("Day20201202.txt").readText()
-    val input = inputRaw.split("\n")
+    val input = Utils.readFileAsListOfString("Day20201202.txt")
+    val obj = Day20201202(input)
 
-    val firstOutput = Day20201202().countValidPasswordsFirst(input)
-    println("Found $firstOutput valid passwords for first test")
-
-    val secondOutput = Day20201202().countValidPasswordsSecond(input)
-    println("Found $secondOutput valid passwords for second test")
+    println("Found ${obj.countValidPasswordsFirst()} valid passwords for first test")
+    println("Found ${obj.countValidPasswordsSecond()} valid passwords for second test")
 }
 

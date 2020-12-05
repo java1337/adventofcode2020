@@ -72,4 +72,5 @@ fun main() {
     when (val maybeResult: Int? = obj.productForThreeInputsThatSumTo2020()) {
         null -> println("There's no result for this input")
         else -> println("Found a product of three of $maybeResult")
-    }}
+    }
+}
