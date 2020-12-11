@@ -68,7 +68,7 @@ class Day20201207(input: List<String>) {
                     val (afterCount, afterModifier, afterColor) = afterMatcher.find(afterFragment)!!.destructured
                     val afterVertex = Vertex(afterColor, afterModifier)
                     println("$beforeVertex -> $afterCount * $afterVertex")
-                    graph.addEdge(afterVertex, beforeVertex)
+                    graph.addEdge(afterVertex, beforeVertex, afterCount.toInt())
                 }
             } else {
                 println("$beforeVertex -> nothing")
@@ -79,18 +79,25 @@ class Day20201207(input: List<String>) {
 
     data class Vertex(val color: String, val modifier: String)
 
-    class DirectedGraph<T> {
-        val adjacencyMap: HashMap<T, HashSet<T>> = HashMap()
 
-        fun addEdge(sourceVertex: T, destinationVertex: T) {
+    class DirectedGraph<T> {
+
+        data class Edge<T>(val source : T, val destination: T)
+        val weightMap = HashMap<Edge<T>, Int>()
+        val adjacencyMap: HashMap<T, HashSet<T>> = HashMap()
+        val reverseMap: HashMap<T, HashSet<T>> = HashMap()
+
+        fun addEdge(sourceVertex: T, destinationVertex: T, weight: Int) {
             // Add edge to source vertex / node.
             adjacencyMap
                 .computeIfAbsent(sourceVertex) { HashSet() }
                 .add(destinationVertex)
-            // Add edge to destination vertex / node.
-//            adjacencyMap
-//                .computeIfAbsent(destinationVertex) { HashSet() }
-//                .add(sourceVertex)
+
+            reverseMap
+                .computeIfAbsent(destinationVertex) { HashSet() }
+                .add(sourceVertex)
+
+            weightMap[Edge(destinationVertex, sourceVertex)] = weight
         }
 
 
@@ -105,7 +112,27 @@ class Day20201207(input: List<String>) {
 
             val total = children union grandchildren
 
-            println("total size so far: ${total.size} (children: ${children.size}, grandchildren: ${grandchildren.size}")
+            println("total size so far for $vertex: ${total.size} (children: ${children.size}, grandchildren: ${grandchildren.size}")
+            return total
+        }
+
+        fun getDescendentWeights(vertex: T, maxDepth: Int) : Int {
+            if (maxDepth == 0 || !reverseMap.containsKey(vertex)) {
+                return 1
+            }
+            val children: Set<T> = reverseMap[vertex] ?: emptySet()
+
+            val grandchildren = children.map {
+                val edge = Edge(vertex, it)
+                val weight = weightMap[edge]
+                val descendents = getDescendentWeights(it, maxDepth - 1)
+                println ("*** X $maxDepth ($vertex) - found $it (weight $weight) x ($descendents descendents)")
+                getDescendentWeights(it, maxDepth - 1) * (weight?: 1)
+            }.sum()
+
+            val total = grandchildren + 1
+
+            println("total size so far for $vertex: $total (children: ${children.size}, grandchildren: $grandchildren)")
             return total
         }
 
@@ -121,11 +148,16 @@ class Day20201207(input: List<String>) {
         return graph.getDescendents(Vertex("gold", "shiny"), 10).size
     }
 
+    fun countTotalBags(): Int {
+        return graph.getDescendentWeights(Vertex("gold", "shiny"), 10) - 1
+    }
+
 }
 
 fun main() {
     val input = Utils.readFileAsListOfString("Day20201207.txt")
     val obj = Day20201207(input)
     println("There are ${obj.countBags()} ways to get shiny gold bags")
+    println("There are ${obj.countTotalBags()} total bags needed")
 }
 
